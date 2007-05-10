@@ -21,7 +21,7 @@
 
 %define name fpc
 %define version 2.1.1
-%define release %mkrel 0.3
+%define release %mkrel 0.4
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -44,6 +44,7 @@ Patch0:		fpc-makefile.patch
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 BuildRoot: 	%{_tmppath}/%{name}-root
+Requires:	gcc
 # Sad but true :(
 BuildRequires:  fpc
 BuildRequires: 	tetex-latex mysql-devel postgresql-devel
