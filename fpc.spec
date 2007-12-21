@@ -43,6 +43,7 @@ Source: 	ftp://ftp.de.freepascal.org/pub/fpc/dist/source-%{version}/%{name}-%{ve
 Patch0:		fpc-makefile.patch
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
+BuildRoot: 	%{_tmppath}/%{name}-root
 Requires:	gcc
 # Sad but true :(
 BuildRequires:  fpc
