@@ -83,7 +83,9 @@ EXTRA_FLAGS=
 NEWPP=`pwd`/compiler/ppc%{fpc_short_target}
 %endif
 NEWFPDOC=`pwd`/utils/fpdoc/fpdoc
-# (anssi 12/2007) -dVER2_0 fixes build with fpc 2.1.1. Build twice due to fmtbcd borkage, see above.
+# (anssi 12/2007) -dVER2_0 fixes build with fpc 2.1.1.
+# Build twice due to fmtbcd borkage, see above.
+# Also, on x86 TARGET_LOADERS hack is needed with 2.1.1.
 	make compiler_cycle ${EXTRA_FLAGS} \
 %if "%(rpm -q --qf '%%{version}' fpc 2>/dev/null)" == "2.1.1"
 		FPC="fpc -dVER2_0" \
