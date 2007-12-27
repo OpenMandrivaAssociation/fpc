@@ -20,8 +20,8 @@
 %endif
 
 %define name fpc
-%define version 2.1.1
-%define release %mkrel 0.4
+%define version 2.2.0
+%define release %mkrel 1
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -39,8 +39,7 @@ Release: 	%{release}
 ExclusiveArch: 	%{ix86} ppc x86_64
 License: 	GPL
 Group: 		Development/Other
-Source: 	ftp://ftp.de.freepascal.org/pub/fpc/dist/source-%{version}/%{name}-%{version}.source.tar.bz2
-Patch0:		fpc-makefile.patch
+Source:		http://downloads.sourceforge.net/freepascal/%{name}-%{version}.source.tar.gz
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 BuildRoot: 	%{_tmppath}/%{name}-root
@@ -62,9 +61,14 @@ utils. Provided units are the runtime library (RTL), free component library
 (FCL), gtk,ncurses,zlib, mysql,postgres,ibase bindings.
 
 %prep
-%setup -q -n %{name}
+%setup -q
 
-#%patch0
+# (anssi 12/2007) temporary to allow build with our unofficial 2.1.1:
+%if "%(rpm -q --qf '%%{version}' fpc 2>/dev/null)" == "2.1.1"
+cp -a rtl/linux/Makefile rtl/linux/Makefile.real
+perl -pi -e "s, fmtbcd , ," rtl/linux/Makefile
+perl -pi -e "s,if FPC_PATCH<2,ifdef FOOMDV," compiler/pp.pas
+%endif
 
 %build
 %if %{build_cross}
@@ -79,11 +83,21 @@ EXTRA_FLAGS=
 NEWPP=`pwd`/compiler/ppc%{fpc_short_target}
 %endif
 NEWFPDOC=`pwd`/utils/fpdoc/fpdoc
-	make compiler_cycle ${EXTRA_FLAGS}
+# (anssi 12/2007) -dVER2_0 fixes build with fpc 2.1.1. Build twice due to fmtbcd borkage, see above.
+	make compiler_cycle ${EXTRA_FLAGS} \
+%if "%(rpm -q --qf '%%{version}' fpc 2>/dev/null)" == "2.1.1"
+		FPC="fpc -dVER2_0"
+	cp -af rtl/linux/Makefile.real rtl/linux/Makefile
+	cp -a ${NEWPP} bootstrapmdvfpc
+	make compiler_cycle ${EXTRA_FLAGS} FPC=$(pwd)/bootstrapmdvfpc
+%endif
+#
 	make rtl_clean rtl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
 	make packages_base_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-	make fcl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
+	make packages_fcl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
+	make fv_smart FPC=${NEWPP} ${EXTRA_FLAGS}
 	make packages_extra_smart FPC=${NEWPP} ${EXTRA_FLAGS}
+	make ide_all FPC=${NEWPP} ${EXTRA_FLAGS}
 	make utils_all FPC=${NEWPP} ${EXTRA_FLAGS}
 #%if !%{build_cross}
 #	make -C docs pdf FPDOC=${NEWFPDOC} FPC=${NEWPP} ${EXTRA_FLAGS}
@@ -106,7 +120,8 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	make compiler_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make rtl_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make packages_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
-	make fcl_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
+	make fv_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
+	make ide_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make utils_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 
 %if %{build_cross}
@@ -143,6 +158,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc utils/fpdoc/{COPYING,README}
+%doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
 %{_prefix}/lib/fpc
 #%if !%{build_cross}
