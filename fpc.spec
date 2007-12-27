@@ -86,7 +86,11 @@ NEWFPDOC=`pwd`/utils/fpdoc/fpdoc
 # (anssi 12/2007) -dVER2_0 fixes build with fpc 2.1.1. Build twice due to fmtbcd borkage, see above.
 	make compiler_cycle ${EXTRA_FLAGS} \
 %if "%(rpm -q --qf '%%{version}' fpc 2>/dev/null)" == "2.1.1"
-		FPC="fpc -dVER2_0"
+		FPC="fpc -dVER2_0" \
+%ifarch %ix86
+		TARGET_LOADERS="prt0 dllprt0 cprt0 gprt0"
+%endif
+#
 	cp -af rtl/linux/Makefile.real rtl/linux/Makefile
 	cp -a ${NEWPP} bootstrapmdvfpc
 	make compiler_cycle ${EXTRA_FLAGS} FPC=$(pwd)/bootstrapmdvfpc
