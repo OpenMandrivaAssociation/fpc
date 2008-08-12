@@ -20,8 +20,8 @@
 %endif
 
 %define name fpc
-%define version 2.2.0
-%define release %mkrel 2
+%define version 2.2.2
+%define release %mkrel 1
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -37,9 +37,9 @@ Name: 		%{name}
 Version: 	%{version}
 Release: 	%{release}
 ExclusiveArch: 	%{ix86} ppc x86_64
-License: 	GPL
+License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
-Source:		http://downloads.sourceforge.net/freepascal/%{name}-%{version}.source.tar.gz
+Source:		http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 BuildRoot: 	%{_tmppath}/%{name}-root
@@ -99,10 +99,7 @@ NEWFPDOC=`pwd`/utils/fpdoc/fpdoc
 %endif
 #
 	make rtl_clean rtl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-	make packages_base_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-	make packages_fcl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-	make fv_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-	make packages_extra_smart FPC=${NEWPP} ${EXTRA_FLAGS}
+	make packages_smart FPC=${NEWPP} ${EXTRA_FLAGS}
 	make ide_all FPC=${NEWPP} ${EXTRA_FLAGS}
 	make utils_all FPC=${NEWPP} ${EXTRA_FLAGS}
 #%if !%{build_cross}
@@ -126,7 +123,6 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	make compiler_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make rtl_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make packages_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
-	make fv_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make ide_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make utils_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 
