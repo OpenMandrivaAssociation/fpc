@@ -20,7 +20,7 @@
 %endif
 
 %define name fpc
-%define version 2.2.2
+%define version 2.2.4
 %define release %mkrel 1
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
