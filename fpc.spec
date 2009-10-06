@@ -21,7 +21,7 @@
 
 %define name fpc
 %define version 2.2.4
-%define release %mkrel 1
+%define release %mkrel 2
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -60,6 +60,15 @@ exceptions,ansistrings,RTTI). This package contains commandline compiler and
 utils. Provided units are the runtime library (RTL), free component library
 (FCL), gtk,ncurses,zlib, mysql,postgres,ibase bindings.
 
+%package src
+# Needed for e.g. lazarus
+Summary:	Source code of Free Pascal Compiler
+Group:		Development/Other
+
+%description src
+The source code of Freepascal for documentation and code generation
+purposes.
+
 %prep
 %setup -q
 
@@ -71,6 +80,11 @@ perl -pi -e "s,if FPC_PATCH<2,ifdef FOOMDV," compiler/pp.pas
 %endif
 
 %build
+mkdir -p fpc_src
+cp -a rtl packages fpc_src
+rm -rf fpc_src/packages/extra/amunits
+rm -rf fpc_src/packages/extra/winunits
+
 %if %{build_cross}
 fpcmake -T%{fpc_target}-linux
 %endif
@@ -142,6 +156,8 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	#make api_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 	#make packages_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 
+mkdir -p %{buildroot}%{_datadir}/fpcsrc
+cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 
 %clean
 #	make compiler_clean
@@ -166,4 +182,8 @@ rm -rf $RPM_BUILD_ROOT
 #%if !%{build_cross}
 #%{_mandir}/*/*
 #%endif
+
+%files src
+%defattr(-,root,root,-)
+%{_datadir}/fpcsrc
 
