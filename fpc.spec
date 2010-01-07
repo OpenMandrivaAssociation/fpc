@@ -20,8 +20,8 @@
 %endif
 
 %define name fpc
-%define version 2.2.4
-%define release %mkrel 2
+%define version 2.4.0
+%define release %mkrel 1
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -175,7 +175,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc utils/fpdoc/{COPYING,README}
 %doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
 %{_prefix}/lib/fpc
