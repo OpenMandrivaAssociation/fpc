@@ -20,8 +20,8 @@
 %endif
 
 %define name fpc
-%define version 2.4.2
-%define release %mkrel 2
+%define version 2.4.4
+%define release %mkrel 1
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -70,7 +70,7 @@ The source code of Freepascal for documentation and code generation
 purposes.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 
 # (anssi 12/2007) temporary to allow build with our unofficial 2.1.1:
 %if "%(rpm -q --qf '%%{version}' fpc 2>/dev/null)" == "2.1.1"
