@@ -19,9 +19,11 @@
 %define fpc_short_target 386
 %endif
 
+%define debug_package %{nil}
+
 %define name fpc
 %define version 2.4.4
-%define release %mkrel 1
+%define release %mkrel 2
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -50,6 +52,7 @@ BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
 %endif
+Obsoletes: fpc-base
 
 %description	
 The Free Pascal Compiler is a Turbo Pascal 7.0 and Delphi compatible 32bit
@@ -68,6 +71,19 @@ Group:		Development/Other
 %description src
 The source code of Freepascal for documentation and code generation
 purposes.
+
+%package base
+Summary:	Package consist only rtl and base unit. May be useful for education with standart Pascal CLI programm.
+Group:		Development/Other
+Obsoletes: fpc
+
+%description base
+This package consists only RTL units for using with classical CLI Pascal programm.
+Also it consists:
+
+- X11 (Xlib, Xutil)
+- NCurses
+- ZLib.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -186,3 +202,16 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_datadir}/fpcsrc
 
+%files base
+%defattr(-,root,root,-)
+%ifarch i586
+%{_prefix}/lib/fpc/%{version}/units/i586-linux/rtl
+%{_prefix}/lib/fpc/%{version}/units/i586-linux/X11
+%{_prefix}/lib/fpc/%{version}/units/i586-linux/ncurses
+%{_prefix}/lib/fpc/%{version}/units/i586-linux/zlib
+%else
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/X11
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/zlib
+%endif
