@@ -46,8 +46,8 @@ Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 BuildRoot: 	%{_tmppath}/%{name}-root
 Requires:	gcc
-Requires:	fpc-base
-Requires:	fpc-units
+Requires:	fpc-base == %{version}
+Requires:	fpc-units == %{version}
 # Sad but true :(
 BuildRequires:  fpc
 BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
@@ -198,9 +198,9 @@ rm -rf $RPM_BUILD_ROOT
 %{fpcdir}/samplecfg %{fpcdir}
 
 %files
+%defattr(-,root,root)
 
 %files units
-
 %defattr(-,root,root)
 %{_prefix}/lib/fpc/%{version}/units
 # in fpc-base
