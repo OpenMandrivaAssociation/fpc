@@ -49,7 +49,7 @@ Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
 # Sad but true :(
-BuildRequires:  fpc
+BuildRequires:  fpc-base
 BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
