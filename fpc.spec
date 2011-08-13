@@ -90,7 +90,7 @@ Summary:	Units not included in fpc-base
 Group:		Development/Other
 Requires: fpc-base == %{version}
 
-%description base
+%description units
 This package consists units not include in fpc-base packets. Using it, if you need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
