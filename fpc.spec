@@ -205,10 +205,10 @@ rm -rf $RPM_BUILD_ROOT
 %files base
 %defattr(-,root,root,-)
 %ifarch i586
-%{_prefix}/lib/fpc/%{version}/units/i586-linux/rtl
-%{_prefix}/lib/fpc/%{version}/units/i586-linux/X11
-%{_prefix}/lib/fpc/%{version}/units/i586-linux/ncurses
-%{_prefix}/lib/fpc/%{version}/units/i586-linux/zlib
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/rtl
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/X11
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
 %else
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/X11
