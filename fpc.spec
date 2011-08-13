@@ -45,7 +45,7 @@ URL: 		http://www.freepascal.org/
 BuildRoot: 	%{_tmppath}/%{name}-root
 Requires:	gcc
 # Sad but true :(
-BuildRequires:  fpc
+BuildRequires:  fpc == %{version}
 BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
