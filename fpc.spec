@@ -227,16 +227,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/lib/fpc/lexyacc
 %{_prefix}/lib/fpc/%{version}/ide
 %{_prefix}/lib/fpc/%{version}/msg
-%{_prefix}/lib/fpc/%{version}/ppc386
 %{_prefix}/lib/fpc/%{version}/samplecfg
 %ifarch i586
 %{_prefix}/lib/fpc/%{version}/units/i386-linux/rtl
 %{_prefix}/lib/fpc/%{version}/units/i386-linux/x11
 %{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
 %{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
+%{_prefix}/lib/fpc/%{version}/ppc386
 %else
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/x11
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/zlib
+%{_prefix}/lib/fpc/%{version}/ppcx64
 %endif
