@@ -52,7 +52,7 @@ BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
 %endif
-Obsoletes: fpc-base
+Obsoletes: fpc-base == %{version}
 
 %description	
 The Free Pascal Compiler is a Turbo Pascal 7.0 and Delphi compatible 32bit
@@ -73,9 +73,9 @@ The source code of Freepascal for documentation and code generation
 purposes.
 
 %package base
-Summary:	Package consist only rtl and base unit. May be useful for education with standart Pascal CLI programm.
+Summary:	Package consist only rtl and base unit. May be useful for education with standart Pascal CLI programm
 Group:		Development/Other
-Obsoletes: fpc
+Obsoletes: fpc == %{version}
 
 %description base
 This package consists only RTL units for using with classical CLI Pascal programm.
