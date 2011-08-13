@@ -19,6 +19,8 @@
 %define fpc_short_target 386
 %endif
 
+%define debug_package %{nil}
+
 %define name fpc
 %define version 2.4.4
 %define release %mkrel 3
@@ -44,8 +46,10 @@ Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 BuildRoot: 	%{_tmppath}/%{name}-root
 Requires:	gcc
+Requires:	fpc-base == %{version}
+Requires:	fpc-units == %{version}
 # Sad but true :(
-BuildRequires:  fpc == %{version}
+BuildRequires:  fpc
 BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
@@ -68,6 +72,26 @@ Group:		Development/Other
 %description src
 The source code of Freepascal for documentation and code generation
 purposes.
+
+%package base
+Summary:	Ide and rtl units with some base unit. May be useful for education with standart Pascal CLI programm
+Group:		Development/Other
+
+%description base
+This package consists FPC IDE and only RTL units for using with classical CLI Pascal programm.
+Also it consists:
+
+- X11 (Xlib, Xutil)
+- NCurses
+- ZLib.
+
+%package units
+Summary:	Units not included in fpc-base
+Group:		Development/Other
+Requires: fpc-base == %{version}
+
+%description units
+This package consists units not include in fpc-base packets. Using it, if you need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -175,14 +199,44 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc %{_defaultdocdir}/%{name}-%{version}
-%{_bindir}/*
-%{_prefix}/lib/fpc
-#%if !%{build_cross}
-#%{_mandir}/*/*
-#%endif
+
+%files units
+%defattr(-,root,root)
+%{_prefix}/lib/fpc/%{version}/units
+# in fpc-base
+%ifarch i586
+%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/rtl
+%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/x11
+%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
+%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
+%else
+%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
+%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/x11
+%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
+%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/zlib
+%endif
 
 %files src
 %defattr(-,root,root,-)
 %{_datadir}/fpcsrc
 
+%files base
+%defattr(-,root,root,-)
+%doc %{_defaultdocdir}/%{name}-%{version}
+%{_bindir}/*
+%{_prefix}/lib/fpc/lexyacc
+%{_prefix}/lib/fpc/%{version}/ide
+%{_prefix}/lib/fpc/%{version}/msg
+%{_prefix}/lib/fpc/%{version}/ppc386
+%{_prefix}/lib/fpc/%{version}/samplecfg
+%ifarch i586
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/rtl
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/x11
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
+%{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
+%else
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/x11
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
+%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/zlib
+%endif
