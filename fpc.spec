@@ -193,7 +193,7 @@ cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 
 rm -rf $RPM_BUILD_ROOT
 	
-%post
+%post base
 # Create config
 %{fpcdir}/samplecfg %{fpcdir}
 
