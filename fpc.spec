@@ -1,6 +1,8 @@
 # (cjw) to bootstrap fpc for a new architecture ARCH, run
 # rpm -bb --define 'cross_target $ARCH' --target $ARCH fpc.spec
 
+%define useprebuiltcompiler 1
+
 %define build_cross %{?cross_target:1}%{!?cross_target:0}
 %define cross_prefix %{?cross_target:cross-%{cross_target}-}
 %if %{build_cross}
@@ -42,14 +44,19 @@ ExclusiveArch: 	%{ix86} ppc x86_64
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Source:		http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
+# This is only needed when useprebuiltcompiler is defined.
+# But it's not in an 'if defined' block, since the file has to be included in the srpm
+# Thus you should enable this line when useprebuildcompiler is defined for any target
+Source1:	http://www.cnoc.nl/fpc/%{name}-%{version}.compiler.bin.tar.gz
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 BuildRoot: 	%{_tmppath}/%{name}-root
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
-# Sad but true :(
-BuildRequires:  fpc
+%if ! %{defined useprebuiltcompiler}
+BuildRequires:	fpc
+%endif
 BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
@@ -94,13 +101,10 @@ Requires: fpc-base == %{version}
 This package consists units not include in fpc-base packets. Using it, if you need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
-%setup -q -n %{name}-%{version}
-
-# (anssi 12/2007) temporary to allow build with our unofficial 2.1.1:
-%if "%(rpm -q --qf '%%{version}' fpc 2>/dev/null)" == "2.1.1"
-cp -a rtl/linux/Makefile rtl/linux/Makefile.real
-perl -pi -e "s, fmtbcd , ," rtl/linux/Makefile
-perl -pi -e "s,if FPC_PATCH<2,ifdef FOOMDV," compiler/pp.pas
+%if %{defined useprebuiltcompiler}
+%setup -a1 -n %{name}-%{version} -q
+%else
+%setup -n %{name}-%{version} -q
 %endif
 
 %build
@@ -121,20 +125,14 @@ EXTRA_FLAGS=
 NEWPP=`pwd`/compiler/ppc%{fpc_short_target}
 %endif
 NEWFPDOC=`pwd`/utils/fpdoc/fpdoc
-# (anssi 12/2007) -dVER2_0 fixes build with fpc 2.1.1.
-# Build twice due to fmtbcd borkage, see above.
-# Also, on x86 TARGET_LOADERS hack is needed with 2.1.1.
-	make compiler_cycle ${EXTRA_FLAGS} \
-%if "%(rpm -q --qf '%%{version}' fpc 2>/dev/null)" == "2.1.1"
-		FPC="fpc -dVER2_0" \
-%ifarch %ix86
-		TARGET_LOADERS="prt0 dllprt0 cprt0 gprt0"
+
+%if %{defined useprebuiltcompiler}
+STARTPP=`pwd`/startcompiler/ppc%{fpc_short_target}
+%else
+STARTPP=ppc%{fpc_short_target}
 %endif
-#
-	cp -af rtl/linux/Makefile.real rtl/linux/Makefile
-	cp -a ${NEWPP} bootstrapmdvfpc
-	make compiler_cycle ${EXTRA_FLAGS} FPC=$(pwd)/bootstrapmdvfpc
-%endif
+
+	make compiler_cycle ${EXTRA_FLAGS} FPC=${STARTPP}
 #
 	make rtl_clean rtl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
 	make packages_smart FPC=${NEWPP} ${EXTRA_FLAGS}
