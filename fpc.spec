@@ -189,7 +189,7 @@ cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 #	make packages_clean
 #	make utils_clean
 
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 	
 %post base
 # Create config
