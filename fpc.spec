@@ -45,6 +45,7 @@ Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{vers
 # But it's not in an 'if defined' block, since the file has to be included in the srpm
 # Thus you should enable this line when useprebuildcompiler is defined for any target
 Source1:	http://www.cnoc.nl/fpc/%{name}-%{version}.compiler.bin.tar.gz
+Patch0:		fpc-2.4.4-samplecfg_32and64bit.patch
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 Requires:	gcc
@@ -102,6 +103,7 @@ This package consists units not include in fpc-base packets. Using it, if you ne
 %else
 %setup -q
 %endif
+%patch0 -p1 -b .cfg32_64~
 
 %build
 mkdir -p fpc_src
