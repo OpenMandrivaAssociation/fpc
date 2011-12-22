@@ -23,9 +23,6 @@
 
 %define debug_package %{nil}
 
-%define name fpc
-%define version 2.4.4
-%define release %mkrel 3
 %define fpcversion %{version}
 %define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -37,20 +34,19 @@
 %define buildexampledir %{builddocdir}/examples
 
 
-Name: 		%{name}
-Version: 	%{version}
-Release: 	%{release}
+Name: 		fpc
+Version: 	2.4.4
+Release: 	3
 ExclusiveArch: 	%{ix86} ppc x86_64
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
-Source:		http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
+Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
 # This is only needed when useprebuiltcompiler is defined.
 # But it's not in an 'if defined' block, since the file has to be included in the srpm
 # Thus you should enable this line when useprebuildcompiler is defined for any target
 Source1:	http://www.cnoc.nl/fpc/%{name}-%{version}.compiler.bin.tar.gz
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
-BuildRoot: 	%{_tmppath}/%{name}-root
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
@@ -71,16 +67,16 @@ exceptions,ansistrings,RTTI). This package contains commandline compiler and
 utils. Provided units are the runtime library (RTL), free component library
 (FCL), gtk,ncurses,zlib, mysql,postgres,ibase bindings.
 
-%package src
+%package	src
 # Needed for e.g. lazarus
 Summary:	Source code of Free Pascal Compiler
 Group:		Development/Other
 
-%description src
+%description	src
 The source code of Freepascal for documentation and code generation
 purposes.
 
-%package base
+%package	base
 Summary:	Ide and rtl units with some base unit. May be useful for education with standart Pascal CLI programm
 Group:		Development/Other
 
@@ -92,19 +88,19 @@ Also it consists:
 - NCurses
 - ZLib.
 
-%package units
+%package	units
 Summary:	Units not included in fpc-base
 Group:		Development/Other
-Requires: fpc-base == %{version}
+Requires:	fpc-base == %{version}
 
-%description units
+%description	units
 This package consists units not include in fpc-base packets. Using it, if you need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
 %if %{defined useprebuiltcompiler}
-%setup -a1 -n %{name}-%{version} -q
+%setup -a1 -q
 %else
-%setup -n %{name}-%{version} -q
+%setup -q
 %endif
 
 %build
@@ -143,7 +139,6 @@ STARTPP=ppc%{fpc_short_target}
 #%endif
 
 %install
-rm -Rf %{buildroot}
 #NEWPPUFILES=`pwd`/utils/ppufiles
 %if %{build_cross}
 EXTRA_FLAGS="CPU_TARGET=%{fpc_target} BINUTILSPREFIX=%{cross_target}-linux-"
@@ -181,25 +176,13 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 mkdir -p %{buildroot}%{_datadir}/fpcsrc
 cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 
-%clean
-#	make compiler_clean
-#	make rtl_clean
-#	make fcl_clean
-#	make api_clean
-#	make packages_clean
-#	make utils_clean
-
-rm -rf %{buildroot}
-	
 %post base
 # Create config
 %{fpcdir}/samplecfg %{fpcdir}
 
 %files
-%defattr(-,root,root)
 
 %files units
-%defattr(-,root,root)
 %{_prefix}/lib/fpc/%{version}/units
 # in fpc-base
 %ifarch i586
@@ -215,11 +198,9 @@ rm -rf %{buildroot}
 %endif
 
 %files src
-%defattr(-,root,root,-)
 %{_datadir}/fpcsrc
 
 %files base
-%defattr(-,root,root,-)
 %doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
 %{_prefix}/lib/fpc/lexyacc
