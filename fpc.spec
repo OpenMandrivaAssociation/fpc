@@ -36,7 +36,7 @@
 
 Name: 		fpc
 Version: 	2.4.4
-Release: 	3
+Release: 	4
 ExclusiveArch: 	%{ix86} ppc x86_64
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
@@ -108,7 +108,7 @@ This package consists units not include in fpc-base packets. Using it, if you ne
 %patch1 -p1 -b .build_id~
 
 %build
-mkdir -p fpc_src
+install -dm 755 fpc_src
 cp -a rtl packages fpc_src
 rm -rf fpc_src/packages/extra/amunits
 rm -rf fpc_src/packages/extra/winunits
@@ -177,7 +177,7 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	#make api_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 	#make packages_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 
-mkdir -p %{buildroot}%{_datadir}/fpcsrc
+install -dm 755 %{buildroot}%{_datadir}/fpcsrc
 cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 
 %post base
