@@ -36,8 +36,8 @@
 
 Name: 		fpc
 Version: 	2.4.4
-Release: 	4
-ExclusiveArch: 	%{ix86} ppc x86_64
+Release: 	%mkrel 5
+ExclusiveArch:	%{ix86} ppc x86_64
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
@@ -55,12 +55,12 @@ Requires:	fpc-units == %{version}
 %if ! %{defined useprebuiltcompiler}
 BuildRequires:	fpc
 %endif
-BuildRequires: 	tetex-latex mysql-devel postgresql-devel ncurses-devel
+BuildRequires:	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
 %endif
 
-%description	
+%description
 The Free Pascal Compiler is a Turbo Pascal 7.0 and Delphi compatible 32bit
 Pascal Compiler. It comes with fully TP 7.0 compatible run-time library.
 Some extensions are added to the language, like function overloading. Shared
@@ -73,6 +73,7 @@ utils. Provided units are the runtime library (RTL), free component library
 # Needed for e.g. lazarus
 Summary:	Source code of Free Pascal Compiler
 Group:		Development/Other
+BuildArch:	noarch
 
 %description	src
 The source code of Freepascal for documentation and code generation
@@ -104,14 +105,16 @@ This package consists units not include in fpc-base packets. Using it, if you ne
 %else
 %setup -q
 %endif
-%patch0 -p1 -b .cfg32_64~
+# patch0 seems to break things, at least Lazarus build so we don't use it
+# until some investigation is done
+#patch0 -p1 -b .cfg32_64~
 %patch1 -p1 -b .build_id~
 
 %build
-install -dm 755 fpc_src
-cp -a rtl packages fpc_src
-rm -rf fpc_src/packages/extra/amunits
-rm -rf fpc_src/packages/extra/winunits
+%__install -dm 755 fpc_src
+%__cp -a rtl packages fpc_src
+%__rm -rf fpc_src/packages/extra/amunits
+%__rm -rf fpc_src/packages/extra/winunits
 
 %if %{build_cross}
 fpcmake -T%{fpc_target}-linux
@@ -143,6 +146,7 @@ STARTPP=ppc%{fpc_short_target}
 #%endif
 
 %install
+%__rm -rf %{buildroot}
 #NEWPPUFILES=`pwd`/utils/ppufiles
 %if %{build_cross}
 EXTRA_FLAGS="CPU_TARGET=%{fpc_target} BINUTILSPREFIX=%{cross_target}-linux-"
@@ -162,11 +166,11 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	make utils_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 
 %if %{build_cross}
-	rm -rf %{buildexampledir}
+	%__rm -rf %{buildexampledir}
 %else
 #	make demo_install ${INSTALLOPTS} INSTALL_SOURCEDIR=%{buildexampledir} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 #	make doc_install ${INSTALLOPTS} INSTALL_DOCDIR=%{builddocdir} FPCMAKE=${NEWFCPMAKE}
-	#mv %{buildroot}/%{_prefix}/doc/%{name}-%{version}/examples/* %{buildexampledir} 
+#	mv %{buildroot}/%{_prefix}/doc/%{name}-%{version}/examples/* %{buildexampledir} 
 #	make man_install ${INSTALLOPTS} INSTALL_PREFIX=%{buildmandir} FPCMAKE=${NEWFCPMAKE}
 %endif
 
@@ -177,8 +181,15 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	#make api_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 	#make packages_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 
-install -dm 755 %{buildroot}%{_datadir}/fpcsrc
-cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
+%__install -dm 755 %{buildroot}%{_datadir}/fpcsrc
+%__cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
+
+# fix permissions
+find %{buildroot}%{_datadir}/fpcsrc/ -type d -exec chmod 755 {} \;
+find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
+
+%clean
+%__rm -rf %{buildroot}
 
 %post base
 # Create config
@@ -187,6 +198,7 @@ cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 %files
 
 %files units
+%defattr(-,root,root,-)
 %{_prefix}/lib/fpc/%{version}/units
 # in fpc-base
 %ifarch i586
@@ -202,9 +214,11 @@ cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 %endif
 
 %files src
+%defattr(-,root,root,-)
 %{_datadir}/fpcsrc
 
 %files base
+%defattr(-,root,root,-)
 %doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
 %{_prefix}/lib/fpc/lexyacc
