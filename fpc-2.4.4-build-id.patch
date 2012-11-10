@@ -1,0 +1,14 @@
+--- fpc-2.4.4/compiler/utils/samplecfg.build_id~	2011-12-22 06:08:48.830435534 +0100
++++ fpc-2.4.4/compiler/utils/samplecfg	2011-12-22 06:09:25.331357813 +0100
+@@ -379,6 +379,11 @@ $CPUCROSSIFDEF2
+ #endif
+ 
+ # -----------------------
++# Use BuildId by default
++# -----------------------
++-k--build-id
++
++# -----------------------
+ # Set Filenames and Paths
+ # -----------------------
+ 
