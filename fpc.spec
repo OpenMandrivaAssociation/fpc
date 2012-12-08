@@ -1,8 +1,6 @@
 # (cjw) to bootstrap fpc for a new architecture ARCH, run
 # rpm -bb --define 'cross_target $ARCH' --target $ARCH fpc.spec
 
-%define useprebuiltcompiler 1
-
 %define build_cross %{?cross_target:1}%{!?cross_target:0}
 %define cross_prefix %{?cross_target:cross-%{cross_target}-}
 %if %{build_cross}
@@ -35,8 +33,8 @@
 
 
 Name: 		fpc
-Version: 	2.4.4
-Release: 	%mkrel 5
+Version: 	2.6.0
+Release: 	2
 ExclusiveArch:	%{ix86} ppc x86_64
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
@@ -44,17 +42,12 @@ Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{vers
 # This is only needed when useprebuiltcompiler is defined.
 # But it's not in an 'if defined' block, since the file has to be included in the srpm
 # Thus you should enable this line when useprebuildcompiler is defined for any target
-Source1:	http://www.cnoc.nl/fpc/%{name}-%{version}.compiler.bin.tar.gz
-Patch0:		fpc-2.4.4-samplecfg_32and64bit.patch
-Patch1:		fpc-2.4.4-build-id.patch
 Summary: 	Free Pascal Compiler
 URL: 		http://www.freepascal.org/
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
-%if ! %{defined useprebuiltcompiler}
 BuildRequires:	fpc
-%endif
 BuildRequires:	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
@@ -80,12 +73,12 @@ The source code of Freepascal for documentation and code generation
 purposes.
 
 %package	base
-Summary:	Ide and rtl units with some base unit. May be useful for education with standart Pascal CLI programm
+Summary:	Ide and rtl units with some base unit
 Group:		Development/Other
 
 %description base
-This package consists FPC IDE and only RTL units for using with classical CLI Pascal programm.
-Also it consists:
+This package consists FPC IDE and only RTL units for using with classical 
+CLI Pascal programm. It also includes:
 
 - X11 (Xlib, Xutil)
 - NCurses
@@ -97,24 +90,17 @@ Group:		Development/Other
 Requires:	fpc-base == %{version}
 
 %description	units
-This package consists units not include in fpc-base packets. Using it, if you need all units instead RTL and X11,NCurses and ZLib only.
+This package consists units not include in fpc-base packets. Use it if you
+need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
-%if %{defined useprebuiltcompiler}
-%setup -a1 -q
-%else
 %setup -q
-%endif
-# patch0 seems to break things, at least Lazarus build so we don't use it
-# until some investigation is done
-#patch0 -p1 -b .cfg32_64~
-%patch1 -p1 -b .build_id~
 
 %build
-%__install -dm 755 fpc_src
-%__cp -a rtl packages fpc_src
-%__rm -rf fpc_src/packages/extra/amunits
-%__rm -rf fpc_src/packages/extra/winunits
+install -dm 755 fpc_src
+cp -a rtl packages fpc_src
+rm -rf fpc_src/packages/extra/amunits
+rm -rf fpc_src/packages/extra/winunits
 
 %if %{build_cross}
 fpcmake -T%{fpc_target}-linux
@@ -181,15 +167,13 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	#make api_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 	#make packages_exampleinstall ${INSTALLOPTS} DOCINSTALLDIR=%{builddocdir}
 
-%__install -dm 755 %{buildroot}%{_datadir}/fpcsrc
-%__cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
+install -dm 755 %{buildroot}%{_datadir}/fpcsrc
+cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 
 # fix permissions
 find %{buildroot}%{_datadir}/fpcsrc/ -type d -exec chmod 755 {} \;
 find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 
-%clean
-%__rm -rf %{buildroot}
 
 %post base
 # Create config
@@ -198,7 +182,6 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %files
 
 %files units
-%defattr(-,root,root,-)
 %{_prefix}/lib/fpc/%{version}/units
 # in fpc-base
 %ifarch i586
@@ -214,11 +197,9 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %endif
 
 %files src
-%defattr(-,root,root,-)
 %{_datadir}/fpcsrc
 
 %files base
-%defattr(-,root,root,-)
 %doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
 %{_prefix}/lib/fpc/lexyacc
