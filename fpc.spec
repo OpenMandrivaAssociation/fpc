@@ -47,7 +47,7 @@ URL: 		http://www.freepascal.org/
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
-BuildRequires:	fpc
+#BuildRequires:	fpc
 BuildRequires:	tetex-latex mysql-devel postgresql-devel ncurses-devel
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
