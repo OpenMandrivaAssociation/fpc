@@ -31,24 +31,26 @@
 %define buildlibdir %{buildroot}%{_libdir}
 %define buildexampledir %{builddocdir}/examples
 
-
+Summary: 	Free Pascal Compiler
 Name: 		fpc
 Version: 	2.6.0
 Release: 	2
-ExclusiveArch:	%{ix86} ppc x86_64
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
+Url: 		http://www.freepascal.org/
 Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
 # This is only needed when useprebuiltcompiler is defined.
 # But it's not in an 'if defined' block, since the file has to be included in the srpm
 # Thus you should enable this line when useprebuildcompiler is defined for any target
-Summary: 	Free Pascal Compiler
-URL: 		http://www.freepascal.org/
+ExclusiveArch:	%{ix86} ppc x86_64
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
 #BuildRequires:	fpc
-BuildRequires:	tetex-latex mysql-devel postgresql-devel ncurses-devel
+BuildRequires:	tetex-latex
+BuildRequires:	mysql-devel
+BuildRequires:	postgresql-devel
+BuildRequires:	pkgconfig(ncurses)
 %if %{build_cross}
 BuildRequires:	cross-%{cross_target}-binutils
 %endif
@@ -132,7 +134,6 @@ STARTPP=ppc%{fpc_short_target}
 #%endif
 
 %install
-%__rm -rf %{buildroot}
 #NEWPPUFILES=`pwd`/utils/ppufiles
 %if %{build_cross}
 EXTRA_FLAGS="CPU_TARGET=%{fpc_target} BINUTILSPREFIX=%{cross_target}-linux-"
@@ -152,7 +153,7 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	make utils_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 
 %if %{build_cross}
-	%__rm -rf %{buildexampledir}
+	rm -rf %{buildexampledir}
 %else
 #	make demo_install ${INSTALLOPTS} INSTALL_SOURCEDIR=%{buildexampledir} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 #	make doc_install ${INSTALLOPTS} INSTALL_DOCDIR=%{builddocdir} FPCMAKE=${NEWFCPMAKE}
