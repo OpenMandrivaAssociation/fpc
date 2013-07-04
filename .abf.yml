@@ -1,2 +1,6 @@
 sources:
-  "fpc-2.6.0.source.tar.gz": 6e8b7b0dff78e54180c36e0b410485f201533ee4
+  fpc-2.6.0.source.tar.gz: 6e8b7b0dff78e54180c36e0b410485f201533ee4
+  fpc-2.6.2.arm-linux.tar: b1ec701bb2636ecbc9272f0b506e53aae8be511c
+  fpc-2.6.2.i386-linux.tar: 6a19816e51d1e8e8997ef2c5754050f8b5e65840
+  fpc-2.6.2.source.tar.gz: 9dc9f9e67cd4cf7a0c768f605445f3e66ed3e5fb
+  fpc-2.6.2.x86_64-linux.tar: f31c09545b727396f6f2858d12dcebdd25c5c16f

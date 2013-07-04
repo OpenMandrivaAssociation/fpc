@@ -11,6 +11,9 @@
 %if %{fpc_target} == ppc
 %define fpc_target powerpc
 %endif
+%if %{fpc_target} == i586 
+%define fpc_target i386
+%endif
 %define fpc_short_target %_target_cpu
 %if %{fpc_short_target} == x86_64
 %define fpc_short_target x64
@@ -33,16 +36,17 @@
 
 Summary: 	Free Pascal Compiler
 Name: 		fpc
-Version: 	2.6.0
-Release: 	2
+Version: 	2.6.2
+Release: 	1
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
 Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
-# This is only needed when useprebuiltcompiler is defined.
-# But it's not in an 'if defined' block, since the file has to be included in the srpm
-# Thus you should enable this line when useprebuildcompiler is defined for any target
-ExclusiveArch:	%{ix86} ppc x86_64
+# Bootstrap compilers
+Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.x86_64-linux.tar
+Source11:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.i386-linux.tar
+Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.arm-linux.tar
+ExclusiveArch:	%{ix86} x86_64 %{arm}
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
@@ -62,7 +66,7 @@ Some extensions are added to the language, like function overloading. Shared
 libraries can be linked. Basic Delphi support is already implemented (classes,
 exceptions,ansistrings,RTTI). This package contains commandline compiler and
 utils. Provided units are the runtime library (RTL), free component library
-(FCL), gtk,ncurses,zlib, mysql,postgres,ibase bindings.
+(FCL), gtk, ncurses, zlib, mysql, postgres, ibase bindings.
 
 %package	src
 # Needed for e.g. lazarus
@@ -96,9 +100,25 @@ This package consists units not include in fpc-base packets. Use it if you
 need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
-%setup -q
+%setup -q -a 10 -a 11 -a 12
+TOP="`pwd`"
+cd fpc-%{version}.%{fpc_target}-%{_os}
+./install.sh <<EOF
+$TOP/bootstrap
+n
+n
+n
+n
+n
+EOF
+
+cd "$TOP"
+mkdir -p linker
+ln -s %_bindir/ld.bfd linker/ld
 
 %build
+TOP="`pwd`"
+export PATH="$TOP"/linker:"$TOP/bootstrap/bin:$PATH"
 install -dm 755 fpc_src
 cp -a rtl packages fpc_src
 rm -rf fpc_src/packages/extra/amunits
@@ -117,18 +137,14 @@ NEWPP=`pwd`/compiler/ppc%{fpc_short_target}
 %endif
 NEWFPDOC=`pwd`/utils/fpdoc/fpdoc
 
-%if %{defined useprebuiltcompiler}
-STARTPP=`pwd`/startcompiler/ppc%{fpc_short_target}
-%else
 STARTPP=ppc%{fpc_short_target}
-%endif
 
-	make compiler_cycle ${EXTRA_FLAGS} FPC=${STARTPP}
+make compiler_cycle ${EXTRA_FLAGS} FPC=${STARTPP}
 #
-	make rtl_clean rtl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-	make packages_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-	make ide_all FPC=${NEWPP} ${EXTRA_FLAGS}
-	make utils_all FPC=${NEWPP} ${EXTRA_FLAGS}
+make rtl_clean rtl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
+make packages_smart FPC=${NEWPP} ${EXTRA_FLAGS}
+make ide_all FPC=${NEWPP} ${EXTRA_FLAGS}
+make utils_all FPC=${NEWPP} ${EXTRA_FLAGS}
 #%if !%{build_cross}
 #	make -C docs pdf FPDOC=${NEWFPDOC} FPC=${NEWPP} ${EXTRA_FLAGS}
 #%endif
