@@ -1,0 +1,2 @@
+addFilter("E: statically-linked-binary")
+addFilter("E: non-executable-script")

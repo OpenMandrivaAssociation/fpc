@@ -46,6 +46,7 @@ Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{vers
 Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.x86_64-linux.tar
 Source11:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.i386-linux.tar
 Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.arm-linux.tar
+Source100:	%{name}.rpmlintrc
 ExclusiveArch:	%{ix86} x86_64 %{arm}
 Requires:	gcc
 Requires:	fpc-base == %{version}
