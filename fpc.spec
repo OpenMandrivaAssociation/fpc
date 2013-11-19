@@ -51,8 +51,8 @@ ExclusiveArch:	%{ix86} x86_64 %{arm}
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
-#BuildRequires:	fpc
-BuildRequires:	tetex-latex
+BuildRequires:  texlive-latex
+BuildRequires:  texlive-epsf
 BuildRequires:	mysql-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	pkgconfig(ncurses)
