@@ -37,7 +37,7 @@
 Summary: 	Free Pascal Compiler
 Name: 		fpc
 Version: 	2.6.2
-Release: 	5
+Release: 	6
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
