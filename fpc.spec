@@ -36,8 +36,8 @@
 
 Summary: 	Free Pascal Compiler
 Name: 		fpc
-Version: 	2.6.2
-Release: 	2
+Version: 	2.6.4
+Release: 	0.1
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
@@ -47,12 +47,13 @@ Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/f
 Source11:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.i386-linux.tar
 Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.arm-linux.tar
 Source100:	%{name}.rpmlintrc
+Patch1:		fpc-use_bfd_linker.patch
 ExclusiveArch:	%{ix86} x86_64 %{arm}
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
-#BuildRequires:	fpc
-BuildRequires:	tetex-latex
+BuildRequires:  texlive-latex
+BuildRequires:  texlive-epsf
 BuildRequires:	mysql-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	pkgconfig(ncurses)
@@ -102,6 +103,7 @@ need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
 %setup -q -a 10 -a 11 -a 12
+%apply_patches
 TOP="`pwd`"
 cd fpc-%{version}.%{fpc_target}-%{_os}
 ./install.sh <<EOF
@@ -116,10 +118,12 @@ EOF
 cd "$TOP"
 mkdir -p linker
 ln -s %_bindir/ld.bfd linker/ld
+ln -s %_bindir/ld.bfd linker/ld.bfd
 
 %build
 TOP="`pwd`"
 export PATH="$TOP"/linker:"$TOP/bootstrap/bin:$PATH"
+export PATH="$TOP/bootstrap/bin":$PATH
 install -dm 755 fpc_src
 cp -a rtl packages fpc_src
 rm -rf fpc_src/packages/extra/amunits
