@@ -21,6 +21,9 @@
 %if %{fpc_short_target} == i586
 %define fpc_short_target 386
 %endif
+%if %{fpc_short_target} == armv7hl
+%define fpc_short_target arm
+%endif
 
 %define debug_package %{nil}
 
