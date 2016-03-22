@@ -51,6 +51,7 @@ Source11:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/f
 Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.arm-linux.tar
 Source100:	%{name}.rpmlintrc
 Patch1:		fpc-use_bfd_linker.patch
+Patch2:		ld-linux-arm.patch
 ExclusiveArch:	%{ix86} x86_64 %{arm}
 Requires:	gcc
 Requires:	fpc-base == %{version}
