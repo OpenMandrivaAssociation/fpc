@@ -215,7 +215,8 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/x11
 %exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
 %exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
-%else
+%endif
+%ifarch x86_64
 %exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
 %exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/x11
 %exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
@@ -238,10 +239,14 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
 %{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
 %{_prefix}/lib/fpc/%{version}/ppc386
-%else
+%endif
+%ifarch x86_64
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/x11
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/zlib
 %{_prefix}/lib/fpc/%{version}/ppcx64
+%endif
+%ifarch %arm
+%{_prefix}/lib/fpc/%{version}/ppcarm
 %endif
