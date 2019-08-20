@@ -11,17 +11,20 @@
 %if %{fpc_target} == ppc
 %define fpc_target powerpc
 %endif
-%if %{fpc_target} == i586 
+%if %{fpc_target} == i686
 %define fpc_target i386
 %endif
 %define fpc_short_target %_target_cpu
 %if %{fpc_short_target} == x86_64
 %define fpc_short_target x64
 %endif
-%if %{fpc_short_target} == i586
+%if %{fpc_short_target} == znver1
+%define fpc_short_target x64
+%endif
+%if %{fpc_short_target} == i686
 %define fpc_short_target 386
 %endif
-%if %{fpc_short_target} == armv7hl
+%if %{fpc_short_target} == armv7hnl
 %define fpc_short_target arm
 %endif
 
@@ -39,20 +42,20 @@
 
 Summary: 	Free Pascal Compiler
 Name: 		fpc
-Version: 	2.6.4
-Release: 	5
+Version: 	3.0.4
+Release: 	1
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
-Source0:	http://surfnet.dl.sourceforge.net/sourceforge/freepascal/%{name}-%{version}.source.tar.gz
+Source0:	https://downloads.sourceforge.net/project/freepascal/Source/%{version}/fpc-%{version}.source.tar.gz
 # Bootstrap compilers
 Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.x86_64-linux.tar
 Source11:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.i386-linux.tar
-Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.arm-linux.tar
+# For some reason 3.0.4 doesn't have an upstream arm build
+Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/3.0.2/fpc-3.0.2.arm-linux-eabihf-raspberry.tar
 Source100:	%{name}.rpmlintrc
 Patch1:		fpc-use_bfd_linker.patch
-Patch2:		ld-linux-arm.patch
-ExclusiveArch:	%{ix86} x86_64 %{arm}
+ExclusiveArch:	%{ix86} %{x86_64} %{arm}
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
@@ -167,7 +170,7 @@ NEWFCPMAKE=/usr/bin/fpcmake
 %else
 EXTRA_FLAGS=
 NEWPP=`pwd`/compiler/ppc%{fpc_short_target}
-NEWFCPMAKE=`pwd`//utils/fpcm/fpcmake
+NEWFCPMAKE=`pwd`/utils/fpcm/bin/*/fpcmake
 %endif
 INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=%{buildlibdir} \
                 INSTALL_DOCDIR=%{builddocdir} INSTALL_BINDIR=%{buildbindir}"
@@ -208,19 +211,20 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %files
 
 %files units
-%{_prefix}/lib/fpc/%{version}/units
+%{_libdir}/fpc/%{version}/units
+%{_libdir}/fpc/%{version}/fpmkinst
 # in fpc-base
-%ifarch i586
-%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/rtl
-%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/x11
-%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
-%exclude %{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
+%ifarch %{ix86}
+%exclude %{_libdir}/fpc/%{version}/units/i386-linux/rtl
+%exclude %{_libdir}/fpc/%{version}/units/i386-linux/x11
+%exclude %{_libdir}/fpc/%{version}/units/i386-linux/ncurses
+%exclude %{_libdir}/fpc/%{version}/units/i386-linux/zlib
 %endif
-%ifarch x86_64
-%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
-%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/x11
-%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
-%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/zlib
+%ifarch %{x86_64}
+%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/rtl
+%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/x11
+%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
+%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
 %endif
 
 %files src
@@ -230,23 +234,22 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
 %{_prefix}/lib/fpc/lexyacc
-%{_prefix}/lib/fpc/%{version}/ide
 %{_prefix}/lib/fpc/%{version}/msg
 %{_prefix}/lib/fpc/%{version}/samplecfg
-%ifarch i586
-%{_prefix}/lib/fpc/%{version}/units/i386-linux/rtl
-%{_prefix}/lib/fpc/%{version}/units/i386-linux/x11
-%{_prefix}/lib/fpc/%{version}/units/i386-linux/ncurses
-%{_prefix}/lib/fpc/%{version}/units/i386-linux/zlib
-%{_prefix}/lib/fpc/%{version}/ppc386
+%ifarch %{ix86}
+%{_libdir}/fpc/%{version}/units/i386-linux/rtl
+%{_libdir}/fpc/%{version}/units/i386-linux/x11
+%{_libdir}/fpc/%{version}/units/i386-linux/ncurses
+%{_libdir}/fpc/%{version}/units/i386-linux/zlib
+%{_libdir}/fpc/%{version}/ppc386
 %endif
-%ifarch x86_64
+%ifarch %{x86_64}
 %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
-%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/x11
-%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/ncurses
-%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/zlib
+%{_libdir}/fpc/%{version}/units/x86_64-linux/x11
+%{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
+%{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
 %{_prefix}/lib/fpc/%{version}/ppcx64
 %endif
 %ifarch %arm
-%{_prefix}/lib/fpc/%{version}/ppcarm
+%{_libdir}/fpc/%{version}/ppcarm
 %endif
