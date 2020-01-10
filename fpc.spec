@@ -110,7 +110,7 @@ need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
 %setup -q -a 10 -a 11 -a 12
-%apply_patches
+%autopatch -p1
 TOP="`pwd`"
 cd fpc-%{version}.%{fpc_target}-%{_os}
 ./install.sh <<EOF
