@@ -8,7 +8,7 @@
 %else
 %define fpc_target %_arch
 %endif
-%if %{fpc_target} == "ppc"
+%if %{fpc_target} "==" ppc
 %define fpc_target powerpc
 %endif
 %if %{fpc_target} == "i686"
