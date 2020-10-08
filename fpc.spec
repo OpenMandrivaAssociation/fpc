@@ -15,16 +15,16 @@
 %define fpc_target i386
 %endif
 %define fpc_short_target %_target_cpu
-%if %{fpc_short_target} == x86_64
+%if %{fpc_short_target} == "x86_64"
 %define fpc_short_target x64
 %endif
-%if %{fpc_short_target} == znver1
+%if %{fpc_short_target} == "znver1"
 %define fpc_short_target x64
 %endif
-%if %{fpc_short_target} == i686
+%if %{fpc_short_target} == "i686"
 %define fpc_short_target 386
 %endif
-%if %{fpc_short_target} == armv7hnl
+%if %{fpc_short_target} == "armv7hnl"
 %define fpc_short_target arm
 %endif
 
