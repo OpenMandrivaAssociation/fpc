@@ -8,24 +8,36 @@
 %else
 %define fpc_target %_arch
 %endif
-%if %{fpc_target} == ppc
+%if "%{fpc_target}" == "ppc"
 %define fpc_target powerpc
 %endif
-%if %{fpc_target} == i686
+%if "%{fpc_target}" == "i686"
 %define fpc_target i386
 %endif
+%if "%{fpc_target}" == "ppc64"
+%define fpc_target powerpc64
+%endif
+%if "%{fpc_target}" == "ppc64le"
+%define fpc_target powerpc64le
+%endif
 %define fpc_short_target %_target_cpu
-%if %{fpc_short_target} == x86_64
+%if "%{fpc_short_target}" == "x86_64"
 %define fpc_short_target x64
 %endif
-%if %{fpc_short_target} == znver1
+%if "%{fpc_short_target}" == "znver1"
 %define fpc_short_target x64
 %endif
-%if %{fpc_short_target} == i686
+%if "%{fpc_short_target}" == "i686"
 %define fpc_short_target 386
 %endif
-%if %{fpc_short_target} == armv7hnl
+%if "%{fpc_short_target}" == "armv7hnl"
 %define fpc_short_target arm
+%endif
+%if "%{fpc_short_target}" == "ppc64"
+%define fpc_short_target powerpc64
+%endif
+%if "%{fpc_short_target}" == "ppc64le"
+%define fpc_short_target powerpc64le
 %endif
 
 %define debug_package %{nil}
@@ -42,17 +54,19 @@
 
 Summary: 	Free Pascal Compiler
 Name: 		fpc
-Version: 	3.0.4
+Version: 	3.2.0
 Release: 	1
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
 Source0:	https://downloads.sourceforge.net/project/freepascal/Source/%{version}/fpc-%{version}.source.tar.gz
 # Bootstrap compilers
-Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.x86_64-linux.tar
+Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}-x86_64-linux.tar
 Source11:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.i386-linux.tar
-# For some reason 3.0.4 doesn't have an upstream arm build
-Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/3.0.2/fpc-3.0.2.arm-linux-eabihf-raspberry.tar
+Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.arm-linux.tar
+Source13:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.aarch64-linux.tar
+Source14:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.powerpc64-linux.tar
+Source15:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.powerpc64le-linux.tar
 Source100:	%{name}.rpmlintrc
 Patch1:		fpc-use_bfd_linker.patch
 ExclusiveArch:	%{ix86} %{x86_64} %{arm}
@@ -109,10 +123,10 @@ This package consists units not include in fpc-base packets. Use it if you
 need all units instead RTL and X11,NCurses and ZLib only.
 
 %prep
-%setup -q -a 10 -a 11 -a 12
+%setup -q -a 10 -a 11 -a 12 -a 13 -a 14 -a 15
 %autopatch -p1
 TOP="`pwd`"
-cd fpc-%{version}.%{fpc_target}-%{_os}
+cd fpc-%{version}?%{fpc_target}-%{_os}
 ./install.sh <<EOF
 $TOP/bootstrap
 n
@@ -155,7 +169,6 @@ make compiler_cycle ${EXTRA_FLAGS} FPC=${STARTPP}
 #
 make rtl_clean rtl_smart FPC=${NEWPP} ${EXTRA_FLAGS}
 make packages_smart FPC=${NEWPP} ${EXTRA_FLAGS}
-make ide_all FPC=${NEWPP} ${EXTRA_FLAGS}
 make utils_all FPC=${NEWPP} ${EXTRA_FLAGS}
 #%if !%{build_cross}
 #	make -C docs pdf FPDOC=${NEWFPDOC} FPC=${NEWPP} ${EXTRA_FLAGS}
@@ -177,7 +190,6 @@ INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=
 	make compiler_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make rtl_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make packages_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
-	make ide_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make utils_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 
 %if %{build_cross}
@@ -221,7 +233,7 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %exclude %{_libdir}/fpc/%{version}/units/i386-linux/zlib
 %endif
 %ifarch %{x86_64}
-%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/rtl
+%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/x11
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
@@ -233,6 +245,7 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %files base
 %doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
+%{_libdir}/libpas2jslib.so
 %{_prefix}/lib/fpc/lexyacc
 %{_prefix}/lib/fpc/%{version}/msg
 %{_prefix}/lib/fpc/%{version}/samplecfg
