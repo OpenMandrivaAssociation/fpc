@@ -69,7 +69,7 @@ Source14:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/f
 Source15:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.powerpc64le-linux.tar
 Source100:	%{name}.rpmlintrc
 Patch1:		fpc-use_bfd_linker.patch
-ExclusiveArch:	%{ix86} %{x86_64} %{arm}
+ExclusiveArch:	%{ix86} %{x86_64} %{arm} %{aarch64} %{ppc64} %{ppc64le}
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
