@@ -30,6 +30,9 @@
 %if "%{fpc_short_target}" == "i686"
 %define fpc_short_target 386
 %endif
+%if "%{fpc_short_target}" == "aarch64"
+%define fpc_short_target a64
+%endif
 %if "%{fpc_short_target}" == "armv7hnl"
 %define fpc_short_target arm
 %endif
