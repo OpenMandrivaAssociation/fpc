@@ -70,6 +70,7 @@ Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/f
 Source13:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.aarch64-linux.tar
 Source14:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.powerpc64-linux.tar
 Source15:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.powerpc64le-linux.tar
+Source20:	fpc.cft
 Source100:	%{name}.rpmlintrc
 Patch1:		fpc-use_bfd_linker.patch
 ExclusiveArch:	%{ix86} %{x86_64} %{arm} %{aarch64} %{ppc64} %{ppc64le}
@@ -218,10 +219,7 @@ cp -a fpc_src/* %{buildroot}%{_datadir}/fpcsrc/
 find %{buildroot}%{_datadir}/fpcsrc/ -type d -exec chmod 755 {} \;
 find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 
-
-%post base
-# Create config
-%{fpcdir}/samplecfg %{fpcdir}
+%{buildroot}%{_bindir}/fpcmkcfg -p -t %{SOURCE20} -d "basepath=%{_exec_prefix}" -o %{buildroot}%{_sysconfdir}/fpc.cfg
 
 %files
 
@@ -248,6 +246,7 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %files base
 %doc %{_defaultdocdir}/%{name}-%{version}
 %{_bindir}/*
+%config(noreplace) %{_sysconfdir}/%{name}.cfg
 %{_libdir}/libpas2jslib.so
 %{_prefix}/lib/fpc/lexyacc
 %{_prefix}/lib/fpc/%{version}/msg
