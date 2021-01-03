@@ -248,6 +248,12 @@ rm -rf %{buildroot}/usr/lib/%{name}/lexyacc
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
 %endif
+%ifarch %{aarch64}
+%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/rtl
+%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/x11
+%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/ncurses
+%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/zlib
+%endif
 
 %files src
 %{_datadir}/fpcsrc
@@ -273,6 +279,14 @@ rm -rf %{buildroot}/usr/lib/%{name}/lexyacc
 %{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
 %{_libdir}/fpc/%{version}/ppcx64
 %endif
+%ifarch %{aarch64}
+%{_libdir}/fpc/%{version}/units/aarch64-linux/rtl
+%{_libdir}/fpc/%{version}/units/aarch64-linux/x11
+%{_libdir}/fpc/%{version}/units/aarch64-linux/ncurses
+%{_libdir}/fpc/%{version}/units/aarch64-linux/zlib
+%{_libdir}/fpc/%{version}/ppca64
+%endif
+
 %ifarch %arm
 %{_libdir}/fpc/%{version}/ppcarm
 %endif
