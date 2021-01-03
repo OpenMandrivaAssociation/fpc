@@ -46,7 +46,7 @@
 %define debug_package %{nil}
 
 %define fpcversion %{version}
-%define fpcdir %{_prefix}/lib/%{name}/%{fpcversion}
+%define fpcdir %{_libdir}/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
 
 %define builddocdir %{buildroot}%{docdir}
@@ -58,7 +58,7 @@
 Summary: 	Free Pascal Compiler
 Name: 		fpc
 Version: 	3.2.0
-Release: 	3
+Release: 	4
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
@@ -236,24 +236,10 @@ rm -rf %{buildroot}/usr/lib/%{name}/lexyacc
 %{_libdir}/fpc/%{version}/units
 %{_libdir}/fpc/%{version}/fpmkinst
 # in fpc-base
-%ifarch %{ix86}
-%exclude %{_libdir}/fpc/%{version}/units/i386-linux/rtl
-%exclude %{_libdir}/fpc/%{version}/units/i386-linux/x11
-%exclude %{_libdir}/fpc/%{version}/units/i386-linux/ncurses
-%exclude %{_libdir}/fpc/%{version}/units/i386-linux/zlib
-%endif
-%ifarch %{x86_64}
-%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/rtl
-%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/x11
-%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
-%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
-%endif
-%ifarch %{aarch64}
-%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/rtl
-%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/x11
-%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/ncurses
-%exclude %{_libdir}/fpc/%{version}/units/aarch64-linux/zlib
-%endif
+%exclude %{_libdir}/fpc/%{version}/units/*-linux/rtl
+%exclude %{_libdir}/fpc/%{version}/units/*-linux/x11
+%exclude %{_libdir}/fpc/%{version}/units/*-linux/ncurses
+%exclude %{_libdir}/fpc/%{version}/units/*-linux/zlib
 
 %files src
 %{_datadir}/fpcsrc
@@ -265,27 +251,11 @@ rm -rf %{buildroot}/usr/lib/%{name}/lexyacc
 %{_libdir}/libpas2jslib.so
 %{_libdir}/fpc/%{version}/msg
 %{_libdir}/fpc/%{version}/samplecfg
-%ifarch %{ix86}
-%{_libdir}/fpc/%{version}/units/i386-linux/rtl
-%{_libdir}/fpc/%{version}/units/i386-linux/x11
-%{_libdir}/fpc/%{version}/units/i386-linux/ncurses
-%{_libdir}/fpc/%{version}/units/i386-linux/zlib
-%{_libdir}/fpc/%{version}/ppc386
-%endif
-%ifarch %{x86_64}
-%{_libdir}/fpc/%{version}/units/x86_64-linux/rtl
-%{_libdir}/fpc/%{version}/units/x86_64-linux/x11
-%{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
-%{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
-%{_libdir}/fpc/%{version}/ppcx64
-%endif
-%ifarch %{aarch64}
-%{_libdir}/fpc/%{version}/units/aarch64-linux/rtl
-%{_libdir}/fpc/%{version}/units/aarch64-linux/x11
-%{_libdir}/fpc/%{version}/units/aarch64-linux/ncurses
-%{_libdir}/fpc/%{version}/units/aarch64-linux/zlib
-%{_libdir}/fpc/%{version}/ppca64
-%endif
+%{_libdir}/fpc/%{version}/units/*-linux/rtl
+%{_libdir}/fpc/%{version}/units/*-linux/x11
+%{_libdir}/fpc/%{version}/units/*-linux/ncurses
+%{_libdir}/fpc/%{version}/units/*-linux/zlib
+%{_libdir}/fpc/%{version}/ppc%{fpc_short_target}
 
 %ifarch %arm
 %{_libdir}/fpc/%{version}/ppcarm
