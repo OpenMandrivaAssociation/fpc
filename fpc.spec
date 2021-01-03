@@ -58,7 +58,7 @@
 Summary: 	Free Pascal Compiler
 Name: 		fpc
 Version: 	3.2.0
-Release: 	2
+Release: 	3
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
@@ -73,6 +73,7 @@ Source15:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/f
 Source20:	fpc.cft
 Source100:	%{name}.rpmlintrc
 Patch1:		fpc-use_bfd_linker.patch
+Patch2:		fpc-3.2.0--fix-lib-paths-on-aarch64.patch
 ExclusiveArch:	%{ix86} %{x86_64} %{arm} %{aarch64} %{ppc64} %{ppc64le}
 Requires:	gcc
 Requires:	fpc-base == %{version}
@@ -190,7 +191,9 @@ NEWPP=`pwd`/compiler/ppc%{fpc_short_target}
 NEWFCPMAKE=`pwd`/utils/fpcm/bin/*/fpcmake
 %endif
 INSTALLOPTS="FPC=${NEWPP} INSTALL_PREFIX=%{buildroot}/%{_prefix} INSTALL_LIBDIR=%{buildlibdir} \
-                INSTALL_DOCDIR=%{builddocdir} INSTALL_BINDIR=%{buildbindir}"
+                INSTALL_DOCDIR=%{builddocdir} INSTALL_BINDIR=%{buildbindir} \
+                INSTALL_BASEDIR=%{buildlibdir}/%{name}/%{version} \
+                CODPATH=%{buildlibdir}/%{name}/lexyacc"
 	make compiler_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make rtl_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
 	make packages_distinstall ${INSTALLOPTS} FPCMAKE=${NEWFCPMAKE} ${EXTRA_FLAGS}
@@ -221,6 +224,12 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 
 %{buildroot}%{_bindir}/fpcmkcfg -p -t %{SOURCE20} -d "basepath=%{_exec_prefix}" -o %{buildroot}%{_sysconfdir}/fpc.cfg
 
+# Workaround:
+# newer rpm versions do not allow garbage
+# delete lexyacc (The hardcoded library path is necessary because 'make
+# install' places this file hardcoded at usr/lib)
+rm -rf %{buildroot}/usr/lib/%{name}/lexyacc
+
 %files
 
 %files units
@@ -234,7 +243,7 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %exclude %{_libdir}/fpc/%{version}/units/i386-linux/zlib
 %endif
 %ifarch %{x86_64}
-%exclude %{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
+%exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/rtl
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/x11
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
 %exclude %{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
@@ -248,9 +257,8 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %{_bindir}/*
 %config(noreplace) %{_sysconfdir}/%{name}.cfg
 %{_libdir}/libpas2jslib.so
-%{_prefix}/lib/fpc/lexyacc
-%{_prefix}/lib/fpc/%{version}/msg
-%{_prefix}/lib/fpc/%{version}/samplecfg
+%{_libdir}/fpc/%{version}/msg
+%{_libdir}/fpc/%{version}/samplecfg
 %ifarch %{ix86}
 %{_libdir}/fpc/%{version}/units/i386-linux/rtl
 %{_libdir}/fpc/%{version}/units/i386-linux/x11
@@ -259,11 +267,11 @@ find %{buildroot}%{_datadir}/fpcsrc/ -type f -exec chmod 644 {} \;
 %{_libdir}/fpc/%{version}/ppc386
 %endif
 %ifarch %{x86_64}
-%{_prefix}/lib/fpc/%{version}/units/x86_64-linux/rtl
+%{_libdir}/fpc/%{version}/units/x86_64-linux/rtl
 %{_libdir}/fpc/%{version}/units/x86_64-linux/x11
 %{_libdir}/fpc/%{version}/units/x86_64-linux/ncurses
 %{_libdir}/fpc/%{version}/units/x86_64-linux/zlib
-%{_prefix}/lib/fpc/%{version}/ppcx64
+%{_libdir}/fpc/%{version}/ppcx64
 %endif
 %ifarch %arm
 %{_libdir}/fpc/%{version}/ppcarm
