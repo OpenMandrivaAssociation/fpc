@@ -43,6 +43,7 @@
 %define fpc_short_target powerpc64le
 %endif
 
+%define _empty_manifest_terminate_build 0
 #define debug_package %{nil}
 
 %define fpcversion %{version}
