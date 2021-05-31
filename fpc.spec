@@ -43,7 +43,7 @@
 %define fpc_short_target powerpc64le
 %endif
 
-%define debug_package %{nil}
+#define debug_package %{nil}
 
 %define fpcversion %{version}
 %define fpcdir %{_libdir}/%{name}/%{fpcversion}
