@@ -1,3 +1,4 @@
+%define _empty_manifest_terminate_build 0
 # (cjw) to bootstrap fpc for a new architecture ARCH, run
 # rpm -bb --define 'cross_target $ARCH' --target $ARCH fpc.spec
 
@@ -43,8 +44,6 @@
 %define fpc_short_target powerpc64le
 %endif
 
-%define debug_package %{nil}
-
 %define fpcversion %{version}
 %define fpcdir %{_libdir}/%{name}/%{fpcversion}
 %define docdir %{_datadir}/doc/fpc-%{fpcversion}
@@ -57,14 +56,14 @@
 
 Summary: 	Free Pascal Compiler
 Name: 		fpc
-Version: 	3.2.0
-Release: 	4
+Version: 	3.2.2
+Release: 	1
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
 Url: 		http://www.freepascal.org/
 Source0:	https://downloads.sourceforge.net/project/freepascal/Source/%{version}/fpc-%{version}.source.tar.gz
 # Bootstrap compilers
-Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}-x86_64-linux.tar
+Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.x86_64-linux.tar
 Source11:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.i386-linux.tar
 Source12:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.arm-linux.tar
 Source13:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.aarch64-linux.tar

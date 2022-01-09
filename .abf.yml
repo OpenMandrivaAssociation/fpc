@@ -1,8 +1,8 @@
 sources:
-  fpc-3.2.0.source.tar.gz: 7a298ec4b47b8a11c66e68bb25ae0695eb2211af
-  fpc-3.2.0.aarch64-linux.tar: a2dd79ece046cd095aae533f99820f33b20efbc0
-  fpc-3.2.0.arm-linux.tar: c245b6244fc7a8bdc1fc32e753c9d7a75b07fb4a
-  fpc-3.2.0.i386-linux.tar: 5958e842cb1d4a9b90e9f2d06f7932d757f4cdf9
-  fpc-3.2.0-x86_64-linux.tar: e1fbc6567f5527ac87ffdb595a21d4eed647ffca
-  fpc-3.2.0.powerpc64le-linux.tar: 6a39c79c6b70366d44a3e3b1302ceabaf236f46f
-  fpc-3.2.0.powerpc64-linux.tar: bf8b81c5f203dbe32c72d0edd852e927b25d9f31
+  fpc-3.2.2.aarch64-linux.tar: d19cb22aa576421442f28e0bd861f5005a46493f
+  fpc-3.2.2.arm-linux.tar: 579512ab4ca922940f959a4cdf78786aa197bee3
+  fpc-3.2.2.i386-linux.tar: b2d2cba65dfca6b0c15c634d112f9f5965ca3d59
+  fpc-3.2.2.powerpc64le-linux.tar: 53c00de1be69afe56efa10ba46d5d993c2b119ca
+  fpc-3.2.2.powerpc64-linux.tar: baf1fa94c45b0174c13088ca49c55a291436474e
+  fpc-3.2.2.source.tar.gz: addcaf156267cda738ea650ca12401f90da1c298
+  fpc-3.2.2.x86_64-linux.tar: e122d7676262d33ca3b34606d9febe8a23f1317b
