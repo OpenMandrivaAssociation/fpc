@@ -73,6 +73,7 @@ Source20:	fpc.cft
 Source100:	%{name}.rpmlintrc
 Patch1:		fpc-use_bfd_linker.patch
 Patch2:		fpc-3.2.0--fix-lib-paths-on-aarch64.patch
+Patch3:		https://src.fedoraproject.org/rpms/fpc/raw/b1d39299ade42686ca8e2a491f662efc4219a1f9/f/fpc-3.2.0--glibc-2.34.patch
 ExclusiveArch:	%{ix86} %{x86_64} %{arm} %{aarch64} %{ppc64} %{ppc64le}
 Requires:	gcc
 Requires:	fpc-base == %{version}
