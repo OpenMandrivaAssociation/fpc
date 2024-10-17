@@ -60,7 +60,7 @@ Version: 	3.2.2
 Release: 	3
 License: 	GPLv2+ and LGPLv2+ with exceptions
 Group: 		Development/Other
-Url: 		http://www.freepascal.org/
+Url: 		https://www.freepascal.org/
 Source0:	https://downloads.sourceforge.net/project/freepascal/Source/%{version}/fpc-%{version}.source.tar.gz
 # Bootstrap compilers
 Source10:	http://downloads.sourceforge.net/project/freepascal/Linux/%{version}/fpc-%{version}.x86_64-linux.tar
