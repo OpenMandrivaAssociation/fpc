@@ -78,6 +78,7 @@ ExclusiveArch:	%{ix86} %{x86_64} %{arm} %{aarch64} %{ppc64} %{ppc64le}
 Requires:	gcc
 Requires:	fpc-base == %{version}
 Requires:	fpc-units == %{version}
+BuildRequires:	make
 BuildRequires:  texlive-latex
 BuildRequires:  texlive-epsf
 BuildRequires:	mysql-devel
